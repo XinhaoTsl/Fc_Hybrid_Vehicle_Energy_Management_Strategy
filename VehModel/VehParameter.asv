@@ -1,0 +1,22 @@
+clear
+clc
+disp("Initizled for SC paremeters");
+
+SimTime = inf;
+
+SC_rc = 3000;
+SC_rv = 3.2;
+SC_iv = 3;
+SC_PreChgTime = 100;
+
+SC_ns = 50;
+SC_np = 8;
+SC_nm = 2;
+
+N_SC_Series = 1;
+N_SC_Parallel = 1;
+
+R_bal = 360;
+
+sim('Sub_SC_G_based_221015');
+disp(SC_Q(end));

@@ -1,0 +1,107 @@
+%% Powered by XinhaoXu_tesla 2022
+% Battery Critical Value Calculator
+
+function [sys,x0,str,ts,simStateCompliance] = SecLevOptimizer(t,x,u,flag)
+
+switch flag,
+
+  case 0,
+    [sys,x0,str,ts,simStateCompliance]=mdlInitializeSizes;
+
+  case 1,
+    sys=mdlDerivatives(t,x,u);
+
+  case 2,
+    sys=mdlUpdate(t,x,u);
+
+  case 3,
+    sys=mdlOutputs(t,x,u);
+
+  case 4,
+    sys=mdlGetTimeOfNextVarHit(t,x,u);
+
+  case 9,
+    sys=mdlTerminate(t,x,u);
+
+  otherwise
+    DAStudio.error('Simulink:blocks:unhandledFlag', num2str(flag));
+
+end
+
+function [sys,x0,str,ts,simStateCompliance]=mdlInitializeSizes
+
+sizes = simsizes;
+
+sizes.NumContStates  = 0;
+sizes.NumDiscStates  = 0;
+sizes.NumOutputs     = 2;
+sizes.NumInputs      = 4;
+sizes.DirFeedthrough = 1;
+sizes.NumSampleTimes = 1;   % at least one sample time is needed
+
+sys = simsizes(sizes);
+
+x0  = [];
+str = [];
+ts  = [1 0];
+
+simStateCompliance = 'UnknownSimState';
+
+function sys=mdlDerivatives(t,x,u)
+sys = [];
+
+
+function sys=mdlUpdate(t,x,u)
+sys = [];
+
+%% Formal Block
+function sys=mdlOutputs(t,x,u)
+
+BattReqPwr_w = u(1);
+BattSoc = u(2);
+Ic = u(3);
+nbl_std = u(4);
+
+persistent ah_eff
+
+% Alphabeta Definition Part
+if BattSoc > 0.45
+    alpha = 2694.5;
+    beta = 7411.2;
+else
+    alpha = 1287.6;
+    beta = 6356.3;
+end
+
+% Normal Calculation Part
+if t < 2
+    ah_eff = 0;
+    sf = 0;
+else
+
+    nbl_rt_btm = (BattSoc*alpha+beta)*...
+        exp((-31700+152.5*3.3*Ic)/(8.314*298.15));
+    nbl_rt = (20/nbl_rt_btm)^(1/0.57);
+    
+    % severity factor calculation
+    sf = nbl_std/nbl_rt; 
+    ah_eff = ah_eff + sf*Ic*3.3;
+end
+
+
+%%
+
+sys = [sf;ah_eff]; 
+
+
+function sys=mdlGetTimeOfNextVarHit(t,x,u)
+
+sampleTime = 1;    %  Example, set the next hit to be one second later.
+sys = t + sampleTime;
+
+
+function sys=mdlTerminate(t,x,u)
+
+sys = [];
+
+% end mdlTerminate
