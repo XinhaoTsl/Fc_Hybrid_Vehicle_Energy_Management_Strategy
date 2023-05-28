@@ -11,7 +11,7 @@ load Driving_cycle_recognition_data.mat;
 DrvCycKph = CYC_CSHVR_Vehicle_kmph;
 BattSocInit = 0.8;
 
-run GeneralConfig_Calling.m
+% run GeneralConfig_Calling.m
 
 % plot(0.7*DrvCycKph(:,2))
 
@@ -158,27 +158,31 @@ for HwNum = 1:length(GeneratedCyc_Info(:,5))
             length(GeneratedCyc_Distrbt)+GeneratedCyc_Info(HwNum,4),2) = 4;
     end
 
-    % Cyc randomly generate
+    % Cyc randomly re-arrange
     GeneratedCyc_Distrbt(3:end,1) = rand(length(GeneratedCyc_Distrbt(3:end,2)),1);
     GeneratedCyc_Distrbt = sortrows(GeneratedCyc_Distrbt,1);
 
-    % Cyc Population
+    % Cyc Populate
     GeneratedCyc_MsgTemp = [];
     
     for cycPopu = 1:length(GeneratedCyc_Distrbt(:,2))
         switch GeneratedCyc_Distrbt(cycPopu,2)
             case 1
-                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;std_UrbanDrvCyc];
+                rand_gain = (1.3-0.7)*rand(1)+0.7;
+                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;rand_gain*std_UrbanDrvCyc];
             case 2
-                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;std_SuburbDrvCyc];
+                rand_gain = (1.3-0.8)*rand(1)+0.8;
+                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;rand_gain*std_SuburbDrvCyc];
             case 3
-                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;std_HwDrvCyc];
+                rand_gain = (1.1-0.85)*rand(1)+0.85;
+                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;rand_gain*std_HwDrvCyc];
             case 4
-                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;std_UrbanDrvCyc_Small];
+                rand_gain = (1.3-0.7)*rand(1)+0.7;
+                GeneratedCyc_MsgTemp = [GeneratedCyc_MsgTemp;rand_gain*std_UrbanDrvCyc_Small];
         end
     end
    
-
+    % Cyc smooth
     GeneratedCyc_StepRec = 0;
 
     for cycPopu = 1:length(GeneratedCyc_Distrbt(:,2))-1
@@ -238,7 +242,6 @@ for HwNum = 1:length(GeneratedCyc_Info(:,5))
 
 end % The main generator loop END
 
-stop
 
 %% Optimal Soc Drop Analyze
 
@@ -246,8 +249,9 @@ hh = waitbar(0,'Global Processing');
 
 for HwProp = 1:20
     waitbar((HwProp)/20,hh)
-
-    DrvCycKph = [transpose(1:length(GeneratedCyc_Msg(:,HwProp))),GeneratedCyc_Msg(:,HwProp)];
+    
+    CycLen_temp = GeneratedCyc_Info(HwProp,5);
+    DrvCycKph = [transpose(1:CycLen_temp),GeneratedCyc_Msg(1:CycLen_temp,HwProp)];
     run DP_forOptSocTrajGenerate_Calling.m;
 
     C2G_Rec(:,:,HwProp) = C2G;
@@ -260,6 +264,3 @@ for HwProp = 1:20
     ThetaTable(HwProp,3) = theta(2);
 
 end
-
-
-
