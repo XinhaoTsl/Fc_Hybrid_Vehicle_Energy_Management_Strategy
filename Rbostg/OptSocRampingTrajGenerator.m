@@ -1,4 +1,4 @@
-%% xinhaoxu@tesla.com
+%% Powered by Xinhaoxu_Tesla
 %  Generate the optimal SOC ramping trajectory accordintg to the optimal thetatable
 %  Core Dependency of the Main Configuration function
 
@@ -6,7 +6,7 @@
 load main_theta_results.mat
 % global tom_0122to0125
 
-%% Rolling Optimal Parameter Solver
+%% Cycle Pattern Recognization
 [vstd_formal, vave_formal, a_ave_formal] = Fun_SLMP(DrvCycKph);
 
 len = length(vstd_formal);
@@ -17,7 +17,7 @@ dct = zeros(1,len);
 ssVacc = zeros(1,updateLen);
 ssVspd = zeros(1,updateLen);
 
-
+% Driving cycle type classification
 for step = 1:len
     ssc = ssc + 1;
 
@@ -112,6 +112,8 @@ end
 
 tcpCount = 1;
 tcp = [1, 1, 0, 0, 0];
+
+% "tcp" shortcat of the name "Test Cycle Pattern"
 % tcp = [*CycStratStep, *CycStopStep, CycLen, CycVave]
 %               1             2          3       4
 
@@ -132,6 +134,9 @@ for i = 1:length(Fixedct)
 end
 
 lentcp = length(tcp(:,1));
+
+% "tcp_fine" the optimization of the "tcp" which eliminates the suddern
+% pattern-recognization error, its a offline opstimization.
 
 % tcp_fine = [CycStratStep, CycStopStep, Cyclen, CycVave, CycType, SocDropRef]
 %                   1            2          3       4        5          6
@@ -270,7 +275,7 @@ else
     tcp_fine((tcp_fine(:,5) == 3),6) = hwSocDr_list;
 end
 
-
+% Rbostg value exceeding judgment procedure in Paper fig4-9, P54
 if ~is_hwSocExceed
     subSocDr_sum = BattSocInit - BattSocLowerLimit - hwSocDr_sum - BattSocInitDrop;
     sub_prop = tcp_fine((tcp_fine(:,5) == 2),3)./sum(tcp_fine((tcp_fine(:,5) == 2),3));

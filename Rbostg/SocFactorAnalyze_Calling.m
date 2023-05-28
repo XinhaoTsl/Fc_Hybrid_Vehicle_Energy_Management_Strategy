@@ -1,5 +1,7 @@
+%% Powered by Xinhaoxu_Tesla
+%  Cycle type analyzing / slice operation / LinerRegression-based theta calculation
 
-SubtcpLen = 50;
+SubtcpLen = 50;  % slice mentioned in the paper P45
 BattSocInit = 0.8;
 ts = 1;
 

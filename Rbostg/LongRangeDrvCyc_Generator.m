@@ -1,4 +1,4 @@
-%% xinhaoxu@tesla.com
+%% Powered by Xinhaoxu_Tesla
 %  Optimal Soc Traj analysis script
 
 clc
@@ -10,6 +10,7 @@ load Driving_cycle_recognition_data.mat;
 
 DrvCycKph = CYC_CSHVR_Vehicle_kmph;
 BattSocInit = 0.8;
+need_GeneratedCyc_Anlz = 0;
 
 run GeneralConfig_Calling.m
 
@@ -242,6 +243,21 @@ for HwNum = 1:length(GeneratedCyc_Info(:,5))
 
 end % The main generator loop END
 
+if need_GeneratedCyc_Anlz
+    figure
+    subplot(521);plot(GeneratedCyc_Msg(:,1));
+    subplot(523);plot(GeneratedCyc_Msg(:,3));
+    subplot(525);plot(GeneratedCyc_Msg(:,5));
+    subplot(527);plot(GeneratedCyc_Msg(:,7));
+
+    subplot(529);plot(GeneratedCyc_Msg(:,9));
+
+    subplot(522);plot(GeneratedCyc_Msg(:,11));
+    subplot(524);plot(GeneratedCyc_Msg(:,13));
+    subplot(526);plot(GeneratedCyc_Msg(:,15));
+    subplot(528);plot(GeneratedCyc_Msg(:,17));
+    subplot(5,2,10);plot(GeneratedCyc_Msg(:,19));
+end
 
 %% Optimal Soc Drop Analyze
 
