@@ -11,7 +11,7 @@ load Driving_cycle_recognition_data.mat;
 DrvCycKph = CYC_CSHVR_Vehicle_kmph;
 BattSocInit = 0.8;
 
-% run GeneralConfig_Calling.m
+run GeneralConfig_Calling.m
 
 % plot(0.7*DrvCycKph(:,2))
 
