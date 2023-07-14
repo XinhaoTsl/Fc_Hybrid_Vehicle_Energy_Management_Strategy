@@ -8,6 +8,7 @@ ALL the .m script, simulink model depending on the data inside the <config_c/dat
 
 Turn on the terminal and make sure you've located in the right file address;
 Clone the repo with the shell command below:
+
 $>> git clone git@github.com:XinhaoTsl/Fc_Hybrid_Vehicle_Energy_Management_Strategy.git
 
 **File definiation**
