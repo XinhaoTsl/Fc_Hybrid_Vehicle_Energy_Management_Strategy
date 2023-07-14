@@ -5,12 +5,13 @@ The project's core dependency >> VehModel/Global&RowData/Config_c230321.m
 ALL the .m script, simulink model depending on the data inside the <config_c/data/> initizlizer.
 
 **Installation**
+
 Turn on the terminal and make sure you've located in the right file address;
 Clone the repo with the shell command below:
 $>> git clone git@github.com:XinhaoTsl/Fc_Hybrid_Vehicle_Energy_Management_Strategy.git
 
 **File definiation**
-# 1 VehModel: 
+# 1 VehModel:
 The project is established above the modeling of the Fuel cell hybrid electrical vehicle;
 The vehicle's powertrain model is included in this file.
 # 2 Markov_Predictor
